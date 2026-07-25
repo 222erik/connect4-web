@@ -1,0 +1,32 @@
+/* Dark Theme (default) */
+[data-theme="dark"] {
+    --bg-primary: #1a1a2e;
+    --bg-secondary: #16213e;
+    --text-primary: #eee;
+    --text-secondary: #aaa;
+    --accent: #e94560;
+    --border: #333;
+    --hover: #2a2a4a;
+    --board-bg: #0f3460;
+}
+
+/* Light Theme */
+[data-theme="light"] {
+    --bg-primary: #f5f5f5;
+    --bg-secondary: #fff;
+    --text-primary: #333;
+    --text-secondary: #666;
+    --accent: #e94560;
+    --border: #ddd;
+    --hover: #e0e0e0;
+    --board-bg: #0f3460;
+}
+
+/* Theme transition */
+body {
+    transition: background-color 0.3s, color 0.3s;
+}
+
+* {
+    transition: background-color 0.2s, border-color 0.2s;
+}
