@@ -30,6 +30,7 @@ type Hub struct {
 // NewHub creates a new Hub
 func NewHub() *Hub {
 	return &Hub{
+		clients:    make(map[*Client]bool),
 		games:      make(map[string]*Game),
 		invites:    make(map[string]string),
 		register:   make(chan *Client),
@@ -62,8 +63,8 @@ func (h *Hub) Run() {
 				}
 			}
 			close(client.Send)
+			h.mu.Unlock()
 		}
-		h.mu.Unlock()
 	}
 }
 
@@ -100,6 +101,9 @@ func (h *Hub) BroadcastOnlinePlayers() {
 
 // ClientFromUsername returns the client with the given username
 func (h *Hub) ClientFromUsername(username string) *Client {
+	if username == "" {
+		return nil
+	}
 	h.mu.RLock()
 	defer h.mu.RUnlock()
 	for c := range h.clients {
@@ -125,8 +129,14 @@ func (h *Hub) SendInvite(inviter *Client, inviteeUsername string) bool {
 	h.mu.Lock()
 	defer h.mu.Unlock()
 
-	// Get invitee client
-	invitee := h.ClientFromUsername(inviteeUsername)
+	// Get invitee client (inline to avoid deadlock with ClientFromUsername's RLock)
+	var invitee *Client
+	for client := range h.clients {
+		if client.Username == inviteeUsername {
+			invitee = client
+			break
+		}
+	}
 	if invitee == nil {
 		return false
 	}

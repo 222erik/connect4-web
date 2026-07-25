@@ -1,0 +1,39 @@
+Frontend: Plain HTML, CSS and JS
+Server: Go
+
+Web app where users play connect four with each other.
+
+Issue it solves: you want to play connect four, but have no one to play with.
+
+Connect four strengths strategic thinking, pattern recognition, math reasoning, and planning skills.
+
+Users should be able to:
+React to moves with emojis
+Have a username (or go anonymous)
+See which players are online
+Click on a player to invite them to a match
+Search for players
+An invite cannot be sent if the invited is in a match. The invite is deleted if the inviter joins a match with someone else.
+
+The website should have:
+Animations
+Light/dark mode
+Menu where you can see which players are active
+
+Each user should have:
+A private count on how many matches they have played and won
+A username (optional)
+
+There should be a bot ready to play if there are no active players. The bot just makes random moves. (Or it has very simple logic.)
+
+The login-system is very simple. There is no database. Each login is just a username that lives in memory. 
+
+If a user is anonymous, they cannot invite or be invited.
+
+When a user enters the website, they enter a username (or go anonymous). The server checks if the username is already taken. If not, the user is welcomed and the server stores the username in memory.
+
+How the server knows if a user is active. The client pings the server every minute or so. If the server doesn’t receive any ping from a user in 5 minutes, the user is deleted.
+
+How many matches the user has won and played is stored in local storage and saved for the next time.
+
+If you play as anonymous, you can only play with bot.

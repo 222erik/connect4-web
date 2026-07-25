@@ -72,8 +72,6 @@ func HandleWebSocket(hub *Hub, w http.ResponseWriter, r *http.Request) {
 		LastPing: time.Now(),
 	}
 
-	hub.RegisterClient(client)
-
 	go client.writePump()
 	go client.readPump()
 }
@@ -165,6 +163,8 @@ func (c *Client) handleMessage(data []byte) {
 		c.handleNewUser(msg)
 	case "ping":
 		c.handlePing()
+	case "find_match":
+		c.startBotGame()
 	case "game_move":
 		c.handleGameMove(msg)
 	case "send_invite":
@@ -184,7 +184,7 @@ func (c *Client) handleMessage(data []byte) {
 
 func (c *Client) handleNewUser(msg map[string]any) {
 	username, ok := msg["username"].(string)
-	if !ok || username == "" {
+	if !ok {
 		c.sendError("Invalid username")
 		return
 	}
@@ -194,9 +194,10 @@ func (c *Client) handleNewUser(msg map[string]any) {
 		return
 	}
 
+	c.Username = username
 	c.hub.RegisterClient(c)
 	c.sendMessage(map[string]any{
-		"type":     "user_registered",
+		"type":     "user_created",
 		"username": username,
 	})
 	// Broadcast updated player list
@@ -215,7 +216,7 @@ func (c *Client) handleGameMove(msg map[string]any) {
 		return
 	}
 
-	column, ok := msg["column"].(int)
+	column, ok := msg["column"].(float64)
 	if !ok || column < 0 || column > 6 {
 		c.sendError("Invalid column")
 		return
@@ -227,7 +228,7 @@ func (c *Client) handleGameMove(msg map[string]any) {
 		return
 	}
 
-	game.MakeMove(c, column)
+	game.MakeMove(c, int(column))
 }
 
 func (c *Client) handleSendInvite(msg map[string]any) {
