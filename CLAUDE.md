@@ -25,7 +25,7 @@ All server code is in the `server` package with `main.go` as the entry point.
 - `server/hub.go` — Central Hub type that holds all state in-memory: connected clients (map[*Client]bool), active games (map[string]*Game), and pending invites (map[string]string). Thread safety via `sync.RWMutex`. Communication with clients is done through two channels (`register`, `unregister`) processed in a main select loop.
 - `server/client.go` — Each WebSocket connection is a `Client`. Contains the WebSocket read/write pumps, message dispatch (`handleMessage`), and handlers for all message types (`handleNewUser`, `handleGameMove`, `handleSendInvite`, etc.). Client is registered in the hub on connect. Bot clients are synthetic `Client` structs with `IsBot: true`.
 - `server/game.go` — Game struct holds a 6x7 board, two players, turn state, and win detection. `MakeMove` validates the player, drops the piece, checks for win/draw, switches turns, and triggers bot moves. Win check scans horizontal, vertical, and both diagonals from the last move.
-- `server/bot.go` — Simple random-move bot. `GetMove` loops until it finds an empty column.
+- `server/bot.go` — Minimax bot with alpha-beta pruning (depth 6). `GetMove` evaluates all valid columns, uses `evaluate` to score board windows, and `orderColumns` (center-first) for better pruning.
 
 **Key patterns:**
 
