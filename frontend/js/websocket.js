@@ -6,6 +6,7 @@ const WS = {
     maxReconnectAttempts: 5,
     reconnectDelay: 1000,
     handlers: {},
+    pingInterval: null,
 
     // Connect to WebSocket server
     connect() {
@@ -32,6 +33,7 @@ const WS = {
 
         this.ws.onclose = () => {
             console.log('WebSocket disconnected');
+            this.stopPingInterval();
             this.emit('disconnected');
             this.attemptReconnect();
         };
@@ -120,9 +122,17 @@ const WS = {
 
     // Start ping interval to keep connection alive
     startPingInterval() {
-        setInterval(() => {
+        if (this.pingInterval) clearInterval(this.pingInterval);
+        this.pingInterval = setInterval(() => {
             this.send({ type: 'ping' });
         }, 60000); // Every 60 seconds
+    },
+
+    stopPingInterval() {
+        if (this.pingInterval) {
+            clearInterval(this.pingInterval);
+            this.pingInterval = null;
+        }
     },
 
     // Set username

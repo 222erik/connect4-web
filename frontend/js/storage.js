@@ -3,17 +3,30 @@
 const Storage = {
     STATS_KEY: 'connect4_stats',
 
-    // Get stats for a username
+    // Get stats for a username (returns a copy to avoid shared-reference mutations)
     getStats(username) {
-        const stats = JSON.parse(localStorage.getItem(this.STATS_KEY) || '{}');
-        return stats[username] || { wins: 0, plays: 0 };
+        try {
+            const stats = JSON.parse(localStorage.getItem(this.STATS_KEY) || '{}');
+            if (stats[username]) {
+                return { wins: stats[username].wins, plays: stats[username].plays };
+            }
+        } catch (e) {
+            console.error('Failed to parse stats:', e);
+        }
+        return { wins: 0, plays: 0 };
     },
 
     // Update stats after a game
     updateStats(username, won) {
         if (!username) return;
 
-        const stats = JSON.parse(localStorage.getItem(this.STATS_KEY) || '{}');
+        let stats = {};
+        try {
+            stats = JSON.parse(localStorage.getItem(this.STATS_KEY) || '{}');
+        } catch (e) {
+            console.error('Failed to parse stats, resetting:', e);
+        }
+
         if (!stats[username]) {
             stats[username] = { wins: 0, plays: 0 };
         }
@@ -23,7 +36,11 @@ const Storage = {
             stats[username].wins++;
         }
 
-        localStorage.setItem(this.STATS_KEY, JSON.stringify(stats));
+        try {
+            localStorage.setItem(this.STATS_KEY, JSON.stringify(stats));
+        } catch (e) {
+            console.error('Failed to save stats:', e);
+        }
     },
 
     // Get theme preference

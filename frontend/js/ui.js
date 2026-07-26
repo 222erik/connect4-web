@@ -2,6 +2,7 @@
 
 const UI = {
     currentScreen: 'login-screen',
+    _notifTimeout: null,
 
     // Show a specific screen
     showScreen(screenId) {
@@ -18,7 +19,8 @@ const UI = {
         notif.textContent = message;
         notif.classList.remove('hidden');
 
-        setTimeout(() => {
+        clearTimeout(this._notifTimeout);
+        this._notifTimeout = setTimeout(() => {
             notif.classList.add('hidden');
         }, duration);
     },
@@ -54,7 +56,7 @@ const UI = {
         }
 
         // Update stats display
-        const username = Storage.getUsername();
+        const username = App.username;
         if (username) {
             const stats = Storage.getStats(username);
             document.getElementById('stat-wins').textContent = stats.wins;
@@ -73,7 +75,7 @@ const UI = {
     updatePlayersList(players) {
         const list = document.getElementById('players-list');
         const count = document.getElementById('player-count');
-        const currentUsername = Storage.getUsername();
+        const currentUsername = App.username;
 
         count.textContent = `(${players.length})`;
         list.innerHTML = '';

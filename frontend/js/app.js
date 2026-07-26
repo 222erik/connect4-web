@@ -50,6 +50,7 @@ const App = {
             WS.findMatch(); // Server will start bot game if no humans available
         });
         document.getElementById('theme-toggle').addEventListener('click', () => UI.toggleTheme());
+        document.getElementById('refresh-players-btn').addEventListener('click', () => this.fetchPlayers());
 
         // Game
         document.getElementById('leave-game-btn').addEventListener('click', () => Game.leave());
@@ -167,6 +168,7 @@ const App = {
 
     handleAnonymous() {
         this.username = null;
+        Storage.setUsername('');
         document.getElementById('player-name').textContent = 'Anonymous';
         document.getElementById('menu-screen').classList.add('anonymous');
         UI.showScreen('menu-screen');
@@ -186,7 +188,7 @@ const App = {
     },
 
     updateMenuStats() {
-        const username = Storage.getUsername();
+        const username = this.username;
         if (!username) return;
         const stats = Storage.getStats(username);
         document.getElementById('menu-stat-plays').textContent = `${stats.plays} plays`;

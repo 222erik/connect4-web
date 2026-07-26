@@ -182,6 +182,29 @@ header {
     margin-bottom: 15px;
     color: var(--text-secondary);
     font-size: 1.15rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.refresh-btn {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.3rem;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: transform 0.2s, color 0.2s;
+}
+
+.refresh-btn:hover {
+    color: var(--accent);
+    transform: rotate(45deg);
+}
+
+.refresh-btn:active {
+    transform: rotate(90deg);
 }
 
 #players-list {

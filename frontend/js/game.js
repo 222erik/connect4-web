@@ -65,6 +65,10 @@ const Game = {
         // Find the lowest empty row in this column
         for (let row = 5; row >= 0; row--) {
             if (this.board[row][col] === 0) {
+                this.isMyTurn = false;
+                const indicator = document.getElementById('turn-indicator');
+                indicator.textContent = "Waiting for opponent...";
+                indicator.style.color = 'var(--text-secondary)';
                 WS.makeMove(col);
                 return;
             }
@@ -96,11 +100,11 @@ const Game = {
         document.getElementById('game-opponent').textContent = `vs ${data.opponent}`;
 
         if (data.your_piece === 1) {
-            document.getElementById('player1-name').textContent = Storage.getUsername() || 'You';
+            document.getElementById('player1-name').textContent = App.username || 'You';
             document.getElementById('player2-name').textContent = data.opponent;
         } else {
             document.getElementById('player1-name').textContent = data.opponent;
-            document.getElementById('player2-name').textContent = Storage.getUsername() || 'You';
+            document.getElementById('player2-name').textContent = App.username || 'You';
         }
 
         this.setTurn(data.your_turn);
@@ -111,32 +115,28 @@ const Game = {
 
     // Handle game over
     gameOver(data) {
-        const username = Storage.getUsername();
-        let won = false;
+        const username = App.username;
 
         if (data.draw) {
             UI.showNotification('Game ended in a draw!');
+            UI.showGameOverModal(false, true);
         } else {
-            won = data.winner === username || data.winner === 'You';
-            const message = won ? 'You won!' : `${data.winner} wins!`;
+            const won = data.piece === this.myPiece;
+            const message = won ? 'You won!' : `${data.opponent || data.winner} wins!`;
             UI.showNotification(message);
             // Glow the winner's pieces
-            const winnerPiece = data.piece;
             for (const cell of document.getElementById('game-board').children) {
-                if (winnerPiece === 1 && cell.classList.contains('red') ||
-                    winnerPiece === 2 && cell.classList.contains('yellow')) {
+                if ((data.piece === 1 && cell.classList.contains('red')) ||
+                    (data.piece === 2 && cell.classList.contains('yellow'))) {
                     cell.classList.add('winner');
                 }
             }
+            // Update stats
+            if (username) {
+                Storage.updateStats(username, won);
+            }
+            UI.showGameOverModal(won, false);
         }
-
-        // Update stats
-        if (username) {
-            Storage.updateStats(username, won);
-        }
-
-        // Show game over modal
-        UI.showGameOverModal(won, data.draw);
 
         // Reset game state
         this.gameId = null;
