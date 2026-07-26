@@ -32,8 +32,29 @@ const Game = {
                 }
 
                 cell.addEventListener('click', () => this.handleCellClick(col));
+                cell.addEventListener('mouseenter', () => this.previewColumn(col));
+                cell.addEventListener('mouseleave', () => this.clearPreview());
                 boardEl.appendChild(cell);
             }
+        }
+    },
+
+    previewColumn(col) {
+        if (!this.isMyTurn) return;
+        const previewClass = this.myPiece === 1 ? 'preview-red' : 'preview-yellow';
+        for (let row = 0; row < 6; row++) {
+            if (this.board[row][col] === 0) {
+                const idx = row * 7 + col;
+                const cell = document.getElementById('game-board').children[idx];
+                cell.classList.add(previewClass);
+                break;
+            }
+        }
+    },
+
+    clearPreview() {
+        for (const cell of document.getElementById('game-board').children) {
+            cell.classList.remove('preview-red', 'preview-yellow');
         }
     },
 
@@ -99,6 +120,14 @@ const Game = {
             won = data.winner === username || data.winner === 'You';
             const message = won ? 'You won!' : `${data.winner} wins!`;
             UI.showNotification(message);
+            // Glow the winner's pieces
+            const winnerPiece = data.piece;
+            for (const cell of document.getElementById('game-board').children) {
+                if (winnerPiece === 1 && cell.classList.contains('red') ||
+                    winnerPiece === 2 && cell.classList.contains('yellow')) {
+                    cell.classList.add('winner');
+                }
+            }
         }
 
         // Update stats

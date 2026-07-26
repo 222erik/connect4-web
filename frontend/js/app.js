@@ -80,6 +80,7 @@ const App = {
             UI.hideGameOverModal();
             UI.showScreen('menu-screen');
             this.fetchPlayers();
+            this.updateMenuStats();
         });
     },
 
@@ -103,6 +104,7 @@ const App = {
             document.getElementById('menu-screen').classList.remove('anonymous');
             UI.showScreen('menu-screen');
             this.fetchPlayers();
+            this.updateMenuStats();
         });
 
         WS.on('players_list', (data) => {
@@ -169,6 +171,7 @@ const App = {
         document.getElementById('menu-screen').classList.add('anonymous');
         UI.showScreen('menu-screen');
         this.fetchPlayers();
+        this.updateMenuStats();
         UI.showNotification('Playing anonymously (can only play against bot)');
     },
 
@@ -180,6 +183,14 @@ const App = {
         } catch (e) {
             console.error('Failed to fetch players:', e);
         }
+    },
+
+    updateMenuStats() {
+        const username = Storage.getUsername();
+        if (!username) return;
+        const stats = Storage.getStats(username);
+        document.getElementById('menu-stat-plays').textContent = `${stats.plays} plays`;
+        document.getElementById('menu-stat-wins').textContent = `${stats.wins} wins`;
     }
 };
 

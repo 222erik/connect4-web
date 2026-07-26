@@ -13,9 +13,9 @@ body {
 }
 
 #app {
-    max-width: 600px;
+    max-width: 720px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 30px;
     min-height: 100vh;
 }
 
@@ -117,9 +117,26 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 0;
+    padding: 20px 0;
     border-bottom: 1px solid var(--border);
-    margin-bottom: 30px;
+    margin-bottom: 40px;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.header-left, .header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+#player-name {
+    font-size: 1.3rem;
+}
+
+#turn-indicator {
+    font-size: 1.5rem;
+    font-weight: 700;
 }
 
 .header-left, .header-right {
@@ -145,12 +162,26 @@ header {
     display: flex;
     flex-direction: column;
     gap: 15px;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
+}
+
+.menu-stats {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 30px;
+    font-size: 1.15rem;
+    color: var(--text-secondary);
+}
+
+.menu-stats-sep {
+    color: var(--border);
 }
 
 .online-players h3 {
     margin-bottom: 15px;
     color: var(--text-secondary);
+    font-size: 1.15rem;
 }
 
 #players-list {
@@ -160,7 +191,7 @@ header {
 }
 
 #players-list li {
-    padding: 12px 15px;
+    padding: 14px 18px;
     border: 1px solid var(--border);
     border-radius: 8px;
     margin-bottom: 8px;
@@ -169,6 +200,7 @@ header {
     align-items: center;
     cursor: pointer;
     transition: background 0.2s;
+    font-size: 1.1rem;
 }
 
 #players-list li:hover {
@@ -197,12 +229,13 @@ header {
     display: flex;
     align-items: center;
     gap: 10px;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
+    font-weight: 600;
 }
 
 .piece {
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
 }
 
@@ -224,9 +257,9 @@ header {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 8px;
-    max-width: 400px;
+    max-width: 460px;
     margin: 0 auto 30px;
-    padding: 20px;
+    padding: 24px;
     background: var(--board-bg);
     border-radius: 15px;
 }
@@ -243,6 +276,17 @@ header {
 .cell:hover:not(.red):not(.yellow) {
     background: var(--hover);
     transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(233, 69, 96, 0.3);
+}
+
+.cell.preview-red {
+    background: rgba(231, 76, 60, 0.4);
+    border-color: rgba(231, 76, 60, 0.6);
+}
+
+.cell.preview-yellow {
+    background: rgba(241, 196, 15, 0.4);
+    border-color: rgba(241, 196, 15, 0.6);
 }
 
 .cell.red {
@@ -272,12 +316,12 @@ header {
 }
 
 #emoji-picker .emoji {
-    padding: 10px 15px;
+    padding: 14px 22px;
     border: 1px solid var(--border);
-    border-radius: 20px;
+    border-radius: 24px;
     background: var(--bg-secondary);
     cursor: pointer;
-    font-size: 1rem;
+    font-size: 1.5rem;
     transition: transform 0.2s;
 }
 
@@ -354,13 +398,15 @@ header {
 /* Notification */
 .notification {
     position: fixed;
-    bottom: 20px;
+    bottom: 40px;
     left: 50%;
     transform: translateX(-50%);
-    padding: 15px 25px;
+    padding: 24px 48px;
+    font-size: 1.4rem;
+    font-weight: 700;
     background: var(--accent);
     color: white;
-    border-radius: 10px;
+    border-radius: 14px;
     animation: slideUp 0.3s ease;
     z-index: 2000;
 }
