@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <link rel="stylesheet" href="css/animations.css">
     <link rel="stylesheet" href="css/themes.css">
 </head>
+
 <body>
     <div id="app">
         <!-- Login Screen -->
@@ -18,6 +20,7 @@
                 <input type="text" id="username-input" placeholder="Username" maxlength="20">
                 <button id="login-btn" class="btn primary">Play</button>
                 <button id="anonymous-btn" class="btn secondary">Play Anonymously</button>
+                <p class="anonymous-note">Anonymous players can only play against the bot</p>
             </div>
         </div>
 
@@ -35,13 +38,12 @@
 
             <main>
                 <div class="action-buttons">
-                    <button id="find-match-btn" class="btn primary large">Find Match</button>
-                    <button id="bot-match-btn" class="btn secondary">Play vs Bot</button>
+                    <button id="find-match-btn" class="btn primary large auth-only">Invite a random player</button>
+                    <button id="bot-match-btn" class="btn secondary large">Play vs Bot</button>
                 </div>
 
-                <div class="online-players">
+                <div class="online-players auth-only">
                     <h3>Online Players <span id="player-count">(0)</span></h3>
-                    <input type="text" id="search-players" placeholder="Search players...">
                     <ul id="players-list"></ul>
                 </div>
             </main>
@@ -131,4 +133,5 @@
     <script src="js/ui.js"></script>
     <script src="js/app.js"></script>
 </body>
+
 </html>

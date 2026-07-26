@@ -100,17 +100,6 @@ const UI = {
         });
     },
 
-    // Filter players based on search
-    filterPlayers(query) {
-        const list = document.getElementById('players-list');
-        const items = list.querySelectorAll('li');
-
-        items.forEach(item => {
-            const username = item.querySelector('span').textContent.toLowerCase();
-            item.style.display = username.includes(query.toLowerCase()) ? 'flex' : 'none';
-        });
-    },
-
     // Toggle theme
     toggleTheme() {
         const html = document.documentElement;

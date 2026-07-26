@@ -3,6 +3,7 @@ package server
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"sync"
 )
 
@@ -117,6 +118,21 @@ func (h *Hub) ClientFromUsername(username string) *Client {
 // RegisterClient registers a new client
 func (h *Hub) RegisterClient(client *Client) {
 	h.register <- client
+}
+
+// Usernames returns all online usernames as JSON
+func (h *Hub) Usernames(w http.ResponseWriter, r *http.Request) {
+	h.mu.RLock()
+	usernames := make([]string, 0, len(h.clients))
+	for c := range h.clients {
+		if c.Username != "" {
+			usernames = append(usernames, c.Username)
+		}
+	}
+	h.mu.RUnlock()
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(usernames)
 }
 
 // UnregisterClient unregisters a client

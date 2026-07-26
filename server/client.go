@@ -243,6 +243,11 @@ func (c *Client) handleSendInvite(msg map[string]any) {
 		return
 	}
 
+	if to == c.Username {
+		c.sendError("Cannot invite yourself")
+		return
+	}
+
 	if !c.hub.SendInvite(c, to) {
 		c.sendError("Failed to send invite")
 		return

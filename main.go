@@ -27,6 +27,9 @@ func main() {
 		server.HandleWebSocket(hub, w, r)
 	})
 
+	// API endpoint for online usernames
+	http.HandleFunc("/api/usernames", hub.Usernames)
+
 	fmt.Printf("Server starting on port %s\n", port)
 	if err := http.ListenAndServe(":"+port, nil); err != nil {
 		log.Fatal("Server failed: ", err)

@@ -34,19 +34,22 @@ const App = {
         });
 
         // Menu
-        document.getElementById('find-match-btn').addEventListener('click', () => {
-            WS.findMatch();
-            UI.showNotification('Searching for opponent...');
+        document.getElementById('find-match-btn').addEventListener('click', async () => {
+            const res = await fetch('/api/usernames');
+            const players = await res.json();
+            const candidates = players.filter(p => p !== this.username && p !== 'Bot');
+            if (candidates.length === 0) {
+                UI.showNotification('No players to invite');
+                return;
+            }
+            const target = candidates[Math.floor(Math.random() * candidates.length)];
+            WS.sendInvite(target);
+            UI.showNotification(`Invite sent to ${target}`);
         });
         document.getElementById('bot-match-btn').addEventListener('click', () => {
             WS.findMatch(); // Server will start bot game if no humans available
         });
         document.getElementById('theme-toggle').addEventListener('click', () => UI.toggleTheme());
-
-        // Search players
-        document.getElementById('search-players').addEventListener('input', (e) => {
-            UI.filterPlayers(e.target.value);
-        });
 
         // Game
         document.getElementById('leave-game-btn').addEventListener('click', () => Game.leave());
@@ -76,6 +79,7 @@ const App = {
         document.getElementById('play-again-btn').addEventListener('click', () => {
             UI.hideGameOverModal();
             UI.showScreen('menu-screen');
+            this.fetchPlayers();
         });
     },
 
@@ -96,7 +100,9 @@ const App = {
             this.username = data.username;
             Storage.setUsername(data.username);
             document.getElementById('player-name').textContent = data.username;
+            document.getElementById('menu-screen').classList.remove('anonymous');
             UI.showScreen('menu-screen');
+            this.fetchPlayers();
         });
 
         WS.on('players_list', (data) => {
@@ -160,8 +166,20 @@ const App = {
     handleAnonymous() {
         this.username = null;
         document.getElementById('player-name').textContent = 'Anonymous';
+        document.getElementById('menu-screen').classList.add('anonymous');
         UI.showScreen('menu-screen');
-        UI.showNotification('Playing anonymously (no invites)');
+        this.fetchPlayers();
+        UI.showNotification('Playing anonymously (can only play against bot)');
+    },
+
+    async fetchPlayers() {
+        try {
+            const res = await fetch('/api/usernames');
+            const players = await res.json();
+            UI.updatePlayersList(players);
+        } catch (e) {
+            console.error('Failed to fetch players:', e);
+        }
     }
 };
 
